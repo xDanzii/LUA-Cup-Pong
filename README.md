@@ -97,3 +97,7 @@ Workspace
 ## Support
 
 If you run into issues, contact: `xDanzii` on Discord.
+
+## Demo
+
+[![Watch the demo](https://img.youtube.com/vi/tVUfhNwM/0.jpg)](https://youtu.be/tVUfhNwM-Tw)
