@@ -14,7 +14,9 @@ local Config = require(Shared:WaitForChild("Config"))
 local player = Players.LocalPlayer
 local throwRequestRemote = Shared:WaitForChild(Remotes.Names.ThrowRequest)
 local winnerAnnouncementRemote = Shared:WaitForChild(Remotes.Names.WinnerAnnouncement)
-local CHARGE_MAX_SECONDS = 1.0
+local CHARGE_MAX_SECONDS = Config.CHARGE_MAX_SECONDS or 1.0
+local UI_ENABLE_CHARGE_BAR = Config.UI_ENABLE_CHARGE_BAR ~= false
+local UI_ENABLE_WINNER_ANNOUNCEMENT = Config.UI_ENABLE_WINNER_ANNOUNCEMENT ~= false
 
 local toolStates = {}
 
@@ -62,9 +64,16 @@ local function createChargeUi()
 	return container, fill
 end
 
-local chargeContainer, chargeFill = createChargeUi()
+local chargeContainer, chargeFill = nil, nil
+if UI_ENABLE_CHARGE_BAR then
+	chargeContainer, chargeFill = createChargeUi()
+end
 
 local function setChargeUiVisible(isVisible)
+	if not UI_ENABLE_CHARGE_BAR or not chargeContainer or not chargeFill then
+		return
+	end
+
 	chargeContainer.Visible = isVisible
 	if not isVisible then
 		chargeFill.Size = UDim2.fromScale(0, 0.76)
@@ -73,6 +82,10 @@ local function setChargeUiVisible(isVisible)
 end
 
 local function updateChargeUi(chargeAlpha)
+	if not UI_ENABLE_CHARGE_BAR or not chargeFill then
+		return
+	end
+
 	local alpha = math.clamp(chargeAlpha, 0, 1)
 	chargeFill.Size = UDim2.fromScale(0.98 * alpha, 0.76)
 	chargeFill.BackgroundColor3 = Color3.fromRGB(88, 196, 102):Lerp(Color3.fromRGB(255, 86, 86), alpha)
@@ -113,9 +126,16 @@ local function createWinnerAnnouncementUi()
 	return label
 end
 
-local winnerLabel = createWinnerAnnouncementUi()
+local winnerLabel = nil
+if UI_ENABLE_WINNER_ANNOUNCEMENT then
+	winnerLabel = createWinnerAnnouncementUi()
+end
 
 local function showWinnerAnnouncement(text)
+	if not UI_ENABLE_WINNER_ANNOUNCEMENT or not winnerLabel then
+		return
+	end
+
 	winnerLabel.TextTransparency = 1
 	winnerLabel.BackgroundTransparency = 1
 	winnerLabel.Text = text
@@ -417,6 +437,10 @@ if player.Character then
 end
 
 winnerAnnouncementRemote.OnClientEvent:Connect(function(payload)
+	if not UI_ENABLE_WINNER_ANNOUNCEMENT then
+		return
+	end
+
 	if typeof(payload) ~= "table" then
 		return
 	end

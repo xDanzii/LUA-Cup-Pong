@@ -34,4 +34,8 @@ Config.BALL_ELASTICITY = 0.15
 Config.SCORE_BALL_REMOVE_DELAY = 0.35
 Config.TOOL_NAME = "PingPongBallTool"
 
+-- UI toggles
+Config.UI_ENABLE_CHARGE_BAR = true
+Config.UI_ENABLE_WINNER_ANNOUNCEMENT = true
+
 return Config
