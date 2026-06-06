@@ -1,36 +1,99 @@
-# Cup Pong script
-Originally a commission made for a user named cyq.
+# Roblox Cup Pong
 
-# How to setup
-MANUAL
-1. Copy these folders/files into your project:
-main.server.luau is your server entry script. It should be placed under ServerScriptService in Roblox.
-main.client.luau is your client entry script. It should be placed under StarterPlayerScripts in Roblox.
-src/server -> ServerScriptService
-src/client -> StarterPlayerScripts
-2. Everything in the shared folder should go to ReplicatedStorage/shared so both server and client can require it.
+Commission project built for a reusable, multiplayer Cup Pong system. Commissioned by 'Cyq'
 
-3. Setup the pong tables
-Create Workspace/GameTables.
-Put each playable table as a Model inside GameTables.
-For each table model:
-Set attribute TableId (string, unique per table), or just rely on model name.
-Add a Cups folder containing all cup parts.
-Add seats (Seat or VehicleSeat) under that table model for player seating logic.
+## Features
 
-4. Setup Cups
-Cups should be BaseParts (or MeshParts) with stable collider geometry.
-Keep cup colliders anchored for reliable hit detection (already controlled in config).
-Optional but recommended: set CupId attribute on each cup for stable identifiers.
+- Seat-based tool access
+- Charged throws (hold and release)
+- Server-authoritative scoring
+- Shared leaderboard points
+- Per-table round flow
+- Winner announcements
 
-5. 
-Test if it all works!
-Debug should tell you whether or not the tables are identified.
-Plenty of debug if any issues arise.
+## Project Structure
 
-Please test it out using the 
+See [default.project.json](default.project.json) for Rojo mapping.
 
-AUTOMATIC
-Use Rojo sync!
+```text
+src/
+	client/
+		main.client.luau
+	server/
+		main.server.luau
+		services/
+			BallSpawner.luau
+			CupDetector.luau
+			LeaderboardService.luau
+			ScoreService.luau
+			SeatService.luau
+			TableController.luau
+			TableManager.luau
+			ThrowService.luau
+			ToolService.luau
+	shared/
+		Config.luau
+		Remotes.luau
+		Changelog.luau
+```
 
-Any issues DM me on discord: xDanzii
+## Quick Setup (Recommended: Rojo)
+
+1. Keep this folder layout intact.
+2. Start Rojo sync for this project.
+3. Open your place in Studio and connect the Rojo plugin.
+4. Verify scripts appear in the mapped services:
+	 - `src/server` -> `ServerScriptService`
+	 - `src/client` -> `StarterPlayerScripts`
+	 - `src/shared` -> `ReplicatedStorage/Shared`
+
+## Manual Setup
+
+If you are not using Rojo sync, place scripts manually:
+
+1. Put [src/server/main.server.luau](src/server/main.server.luau) and [src/server/services](src/server/services) in `ServerScriptService`.
+2. Put [src/client/main.client.luau](src/client/main.client.luau) in `StarterPlayerScripts`.
+3. Put [src/shared](src/shared) in `ReplicatedStorage` as `Shared`.
+
+## Studio Table Hierarchy
+
+Create the gameplay tables like this:
+
+```text
+Workspace
+	GameTables (Folder)
+		TableA (Model)
+			[Attribute] TableId = "TableA"
+
+			Cups (Folder)
+				CupA (BasePart or MeshPart)
+					[Attribute] CupId = "CupA" (recommended)
+				CupB (BasePart or MeshPart)
+					[Attribute] CupId = "CupB" (recommended)
+				CupC (BasePart or MeshPart)
+					[Attribute] CupId = "CupC" (recommended)
+
+			Seats (Folder)
+				Seat1 (Seat or VehicleSeat)
+				Seat2 (Seat or VehicleSeat)
+
+			TableParts (Folder)
+				TableTop (BasePart)
+```
+
+## Required/Recommended Attributes
+
+- Required on each table model:
+	- `TableId` (String)
+- Recommended on each cup:
+	- `CupId` (String)
+
+## Notes
+
+- Cups should be `BasePart` or `MeshPart` with good collision geometry.
+- If table detection fails, check `Workspace/GameTables` naming and table model structure.
+- Debug output is enabled through [src/shared/Config.luau](src/shared/Config.luau).
+
+## Support
+
+If you run into issues, contact: `xDanzii` on Discord.
